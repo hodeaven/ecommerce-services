@@ -6,4 +6,10 @@
   <packaging>pom</packaging>
   <name>ecommerce</name>
   <description>A simple ecommerce project</description>
+  
+  <modules>
+	<module>catalog-service</module>
+	<module>price-service</module>
+	<module>stock-service</module>
+  </modules>
 </project>
