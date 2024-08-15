@@ -5,51 +5,25 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+@Data
 @Entity
 public class Produto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "O nome é obrigatório.")
     private String nome;
-    private String descricao; 
-    
+
+    @NotNull(message = "O preço é obrigatório.")
+    private Double preco;
 
     @ManyToOne
+    @NotNull(message = "A categoria é obrigatória.")
     private Categoria categoria;
-
-    public Produto (){
-    }
-
-    public Produto( String nome, String descricao) {
-        this.nome = nome;
-        this.descricao = descricao;
-    }
-
-   
-    public Long getId() {
-        return id;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public String getDescricao() {
-        return descricao;
-    }
-    public Categoria getCategoria() {
-        return categoria;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
 }

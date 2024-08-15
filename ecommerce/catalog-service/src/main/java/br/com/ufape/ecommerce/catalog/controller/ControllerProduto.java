@@ -1,10 +1,13 @@
 package br.com.ufape.ecommerce.catalog.controller;
 
 import java.util.List;
+
 import br.com.ufape.ecommerce.catalog.model.Produto;
-import br.com.ufape.ecommerce.catalog.repository.RepositoryCategoria;
-import br.com.ufape.ecommerce.catalog.repository.RepositoryProduto;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.ufape.ecommerce.catalog.service.ServiceProduto;
+import jakarta.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,40 +18,45 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/produtos")
 public class ControllerProduto {
 
-    @Autowired
-    RepositoryProduto produtoService;
-    @Autowired
-    RepositoryCategoria categoriaService;
+	private final ServiceProduto serviceProduto;
 
-    @PostMapping("/categorias/{id}/produtos")
-    public Produto criarProduto(@RequestBody Produto produto, @PathVariable Long id ) {
-        produto.setCategoria(categoriaService.findById(id).orElse(null));
-        return produtoService.save(produto);
+	public ControllerProduto(ServiceProduto serviceProduto) {
+        this.serviceProduto = serviceProduto;
     }
 
-    @GetMapping("/produtos")
-    public List<Produto> pegarProduto() {
-        return produtoService.findAll();
+    @GetMapping
+    public List<Produto> encontrarTodosProdutos() {
+        return serviceProduto.encontrarTodosProdutos();
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Produto> encontrarProdutoPorId(@PathVariable Long id) {
+    	Produto produto = serviceProduto.encontrarProdutoPorId(id);
+        return ResponseEntity.ok(produto);
     }
 
-    @DeleteMapping("/produtos/{id}")
-    public void deletarProduto(@PathVariable Long id) {
-        produtoService.deleteById(id);
+    @GetMapping("/categoria/{categoriaId}")
+    public List<Produto> encontrarProdutosPorCategoria(@PathVariable Long categoriaId) {
+        return serviceProduto.encontrarProdutosPorCategoria(categoriaId);
     }
 
-    @PutMapping("/produtos/{id}")
-    public Produto atualizarProduto(@PathVariable Long id, @RequestBody Produto novoProduto) {
-        Produto produtoAntigo = produtoService.findById(id).orElse(null);
-        if (produtoAntigo == null) {
-            return null;
-        }
-        produtoAntigo.setNome(novoProduto.getNome());
-        
-        produtoAntigo.setCategoria(novoProduto.getCategoria());
-        produtoAntigo.setDescricao(novoProduto.getDescricao());
-            return produtoService.save(produtoAntigo);
+    @PostMapping
+    public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto produto) {
+        return new ResponseEntity<>(serviceProduto.criarProduto(produto), HttpStatus.CREATED);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @Valid @RequestBody Produto produto) {
+    	Produto produtoAtualizado = serviceProduto.atualizarProduto(id, produto);
+        return ResponseEntity.ok(produtoAtualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removerProduto(@PathVariable Long id) {
+    	serviceProduto.removerProduto(id);
+        return ResponseEntity.noContent().build();
     }
 }

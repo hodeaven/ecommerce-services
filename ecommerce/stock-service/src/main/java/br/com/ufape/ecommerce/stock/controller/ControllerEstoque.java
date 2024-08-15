@@ -1,68 +1,55 @@
 package br.com.ufape.ecommerce.stock.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import br.com.ufape.ecommerce.stock.model.Estoque;
+import br.com.ufape.ecommerce.stock.services.ServiceEstoque;
+import jakarta.validation.Valid;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import br.com.ufape.ecommerce.stock.model.Estoque;
-import br.com.ufape.ecommerce.stock.repository.RepositoryArmazem;
-import br.com.ufape.ecommerce.stock.repository.RepositoryEstoque;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/estoques")
 public class ControllerEstoque {
 
-	@Autowired
-	private RepositoryEstoque estoqueService;
-	
-	@Autowired
-	private RepositoryArmazem armazemService;
-	
-	@GetMapping("/estoques")
-	public List<Estoque> listarEstoque() {
-		return estoqueService.findAll();
-	}
-	
-	@GetMapping("/estoques/{id}")
-	public Estoque buscarEstoque(@PathVariable long id) {
-		return estoqueService.findById(id).orElse(null);
-	}
-	
-	@DeleteMapping("/estoques/{id}")
-	public void apagarEstoque(@PathVariable long id) {
-		estoqueService.deleteById(id);
-	}
-	
-	@PostMapping("/armazens/{id}/estoques")
-	public Estoque criarNovoEstoque(@PathVariable long id, @RequestBody Estoque novoEstoque) {
-		if(armazemService.findById(id).equals(null)) {
-			return null;
-		} else {
-			novoEstoque.setArmazem(armazemService.findById(id).orElse(null));
-			return estoqueService.save(novoEstoque);
-		}
-	}
-	
-	@GetMapping("/armazens/{id}/estoques")
-	public List<Estoque> listarTodosEstoquesDeUmArmazem(@PathVariable long id) {
-		return estoqueService.findByArmazemId(id);
-	}
-	
-	@PutMapping("/estoques/{id}")
-	public Estoque atualizarEstoque(@PathVariable long id, @RequestBody Estoque novoEstoque) {
-		Estoque estoqueAntigo = estoqueService.findById(id).orElse(null);
-		if(estoqueAntigo.equals(null)) return null;
-		estoqueAntigo.setProdutoId(novoEstoque.getProdutoId());
-		estoqueAntigo.setQuantidadeDisponivel(novoEstoque.getQuantidadeDisponivel());
-		estoqueAntigo.setQuantidadeMaxima(novoEstoque.getQuantidadeMaxima());
-		return estoqueService.save(estoqueAntigo);
-	}
-	
+    private final ServiceEstoque serviceEstoque;
+
+    public ControllerEstoque(ServiceEstoque serviceEstoque) {
+        this.serviceEstoque = serviceEstoque;
+    }
+
+    @GetMapping
+    public List<Estoque> encontrarTodosEstoques() {
+        return serviceEstoque.encontrarTodosEstoques();
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Estoque> encontrarEstoquePorId(@PathVariable Long id) {
+        Estoque estoque = serviceEstoque.encontrarEstoquePorId(id);
+        return ResponseEntity.ok(estoque);
+    }
+
+    @GetMapping("/armazem/{armazemId}")
+    public List<Estoque> encontrarEstoquePorIdDeArmazem(@PathVariable Long armazemId) {
+        return serviceEstoque.encontrarEstoquePorIdDeArmazem(armazemId);
+    }
+
+    @PostMapping
+    public ResponseEntity<Estoque> criarEstoque(@Valid @RequestBody Estoque estoque) {
+        return new ResponseEntity<>(serviceEstoque.criarEstoque(estoque), HttpStatus.CREATED);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Estoque> updateStock(@PathVariable Long id, @Valid @RequestBody Estoque estoque) {
+        Estoque estoqueAtualizado = serviceEstoque.atualizarEstoque(id, estoque);
+        return ResponseEntity.ok(estoqueAtualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removerEstoque(@PathVariable Long id) {
+    	serviceEstoque.removerEstoque(id);
+        return ResponseEntity.noContent().build();
+    }
+    
 }

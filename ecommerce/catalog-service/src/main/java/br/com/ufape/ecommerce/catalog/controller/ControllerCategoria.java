@@ -1,8 +1,11 @@
 package br.com.ufape.ecommerce.catalog.controller;
 
 import java.util.List;
-import br.com.ufape.ecommerce.catalog.repository.RepositoryCategoria;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.ufape.ecommerce.catalog.service.ServiceCategoria;
+import jakarta.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,34 +17,40 @@ import org.springframework.web.bind.annotation.PutMapping;
 import br.com.ufape.ecommerce.catalog.model.Categoria;
 
 @RestController
-@RequestMapping("/api/categorias")
+@RequestMapping("/categorias")
 public class ControllerCategoria {
 
-    @Autowired
-    RepositoryCategoria categoriaService;
+	private final ServiceCategoria serviceCategoria;
 
-    @PostMapping
-    public Categoria criarCategoria(@RequestBody Categoria categoria) {
-        return categoriaService.save(categoria);
+	public ControllerCategoria(ServiceCategoria serviceCategoria) {
+        this.serviceCategoria = serviceCategoria;
     }
 
     @GetMapping
-    public List<Categoria> pegarCategoria() {
-        return categoriaService.findAll();
+    public List<Categoria> encontrarTodasCategorias() {
+        return serviceCategoria.encontrarTodasCategorias();
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Categoria> encontrarCategoriaPorId(@PathVariable Long id) {
+    	Categoria categoria = serviceCategoria.encontrarCategoriaPorId(id);
+        return ResponseEntity.ok(categoria);
+    }
+
+    @PostMapping
+    public ResponseEntity<Categoria> criarCategoria(@Valid @RequestBody Categoria categoria) {
+        return new ResponseEntity<>(serviceCategoria.criarCategoria(categoria), HttpStatus.CREATED);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Categoria> atualizarCategoria(@PathVariable Long id, @Valid @RequestBody Categoria categoria) {
+    	Categoria categoriaAtualizada = serviceCategoria.atualizarCategoria(id, categoria);
+        return ResponseEntity.ok(categoriaAtualizada);
     }
 
     @DeleteMapping("/{id}")
-    public void deletarCategoria(@PathVariable Long id) {
-        categoriaService.deleteById(id);
-    }
-
-    @PutMapping("/{id}")
-    public Categoria atualizarCategoria(@PathVariable Long id, @RequestBody Categoria novaCategoria) {
-        Categoria categoriaAntiga = categoriaService.findById(id).orElse(null);
-        if (categoriaAntiga == null) {
-            return null;
-        }
-        categoriaAntiga.setNome(novaCategoria.getNome());
-            return categoriaService.save(categoriaAntiga);
+    public ResponseEntity<Void> removerCategoria(@PathVariable Long id) {
+    	serviceCategoria.removerCategoria(id);
+        return ResponseEntity.noContent().build();
     }
 }
