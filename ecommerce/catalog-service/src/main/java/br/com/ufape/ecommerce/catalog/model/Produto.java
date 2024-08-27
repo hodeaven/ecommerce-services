@@ -20,9 +20,6 @@ public class Produto {
     @NotBlank(message = "O nome é obrigatório.")
     private String nome;
 
-    @NotNull(message = "O preço é obrigatório.")
-    private Double preco;
-
     @ManyToOne
     @NotNull(message = "A categoria é obrigatória.")
     private Categoria categoria;

@@ -45,7 +45,7 @@ public class ControllerProduto {
 
     @PostMapping
     public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto produto) {
-        return new ResponseEntity<>(serviceProduto.criarProduto(produto), HttpStatus.CREATED);
+    	return new ResponseEntity<>(serviceProduto.criarProduto(produto), HttpStatus.CREATED);
     }
     
     @PutMapping("/{id}")
