@@ -1,0 +1,8 @@
+/home/user/Downloads/ecommerce-microservices/product-service/src/main/java/br/com/ufape/es/topicos/product_service/ProductServiceApplication.java
+/home/user/Downloads/ecommerce-microservices/product-service/src/main/java/br/com/ufape/es/topicos/product_service/config/WebClientConfig.java
+/home/user/Downloads/ecommerce-microservices/product-service/src/main/java/br/com/ufape/es/topicos/product_service/controller/ControllerProduct.java
+/home/user/Downloads/ecommerce-microservices/product-service/src/main/java/br/com/ufape/es/topicos/product_service/dto/ProductRequest.java
+/home/user/Downloads/ecommerce-microservices/product-service/src/main/java/br/com/ufape/es/topicos/product_service/dto/ProductResponse.java
+/home/user/Downloads/ecommerce-microservices/product-service/src/main/java/br/com/ufape/es/topicos/product_service/model/Product.java
+/home/user/Downloads/ecommerce-microservices/product-service/src/main/java/br/com/ufape/es/topicos/product_service/repository/RepositoryProduct.java
+/home/user/Downloads/ecommerce-microservices/product-service/src/main/java/br/com/ufape/es/topicos/product_service/service/ServiceProduct.java
