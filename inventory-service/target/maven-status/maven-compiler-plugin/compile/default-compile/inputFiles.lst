@@ -1,0 +1,13 @@
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/InventoryServiceApplication.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/controller/ControllerInventory.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/controller/ControllerWarehouse.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/dto/InventoryRequest.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/dto/InventoryResponse.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/dto/WarehouseRequest.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/dto/WarehouseResponse.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/model/Inventory.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/model/Warehouse.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/repository/RepositoryInventory.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/repository/RepositoryWarehouse.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/service/ServiceInventory.java
+/home/user/Downloads/ecommerce-microservices/inventory-service/src/main/java/br/com/ufape/es/topicos/inventory_service/service/ServiceWarehouse.java
