@@ -1,6 +1,3 @@
-/* Antes de habilitar este código, implemente a dependência do
-            Spring Security no Discovery Server
-
 package br.com.ufape.es.topicos.discoveryserver.config;
 
 import org.springframework.context.annotation.Bean;
@@ -11,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.config.Customizer.withDefaults;
-
 import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
@@ -36,12 +32,12 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .csrf().disable()  // Desabilitar CSRF para simplificar chamadas externas
             .authorizeHttpRequests((authz) -> authz
-                .anyRequest().authenticated()
+                .requestMatchers("/eureka/**").permitAll()  // Permitir acessos ao Eureka
+                .anyRequest().authenticated()               // Exigir autenticação para outros endpoints
             )
             .httpBasic(withDefaults());
         return http.build();
     }
 }
-
-*/
