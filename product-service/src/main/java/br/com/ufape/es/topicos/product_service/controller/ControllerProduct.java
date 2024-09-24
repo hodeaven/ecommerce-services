@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.util.List;
 
 @RestController
@@ -25,6 +26,7 @@ public class ControllerProduct {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
+    @CircuitBreaker(name = "inventory", fallbackMethod= "fallbackMethod")
     public void createProduct(@RequestBody ProductRequest productRequest) {
         serviceProduct.createProduct(productRequest);
     }
@@ -40,6 +42,10 @@ public class ControllerProduct {
     @ResponseStatus(HttpStatus.FOUND)
     public ProductResponse getProductById(@PathVariable Long id) {
         return serviceProduct.getProductById(id);
+    }
+
+    public String fallbackMethod(ProductRequest productRequest, RuntimeException runtimeException){
+        return "Oops! O serviço está indisponível. Tente novamente mais tarde.";
     }
     
 }
