@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/products")
@@ -27,8 +31,11 @@ public class ControllerProduct {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     @CircuitBreaker(name = "inventory", fallbackMethod= "fallbackMethod")
-    public void createProduct(@RequestBody ProductRequest productRequest) {
+    @TimeLimiter(name = "inventory")
+    @Retry(name = "inventory")
+    public CompletableFuture<String> createProduct(@RequestBody ProductRequest productRequest) {
         serviceProduct.createProduct(productRequest);
+        return CompletableFuture.supplyAsync(() -> "Produto adicionado!");
     }
 
     @GetMapping("")
@@ -44,8 +51,8 @@ public class ControllerProduct {
         return serviceProduct.getProductById(id);
     }
 
-    public String fallbackMethod(ProductRequest productRequest, RuntimeException runtimeException){
-        return "Oops! O serviço está indisponível. Tente novamente mais tarde.";
+    public CompletableFuture<String> fallbackMethod(ProductRequest productRequest, Throwable exception){
+        return CompletableFuture.supplyAsync(() -> "Oops! O serviço está indisponível. Tente novamente mais tarde.");
     }
     
 }
