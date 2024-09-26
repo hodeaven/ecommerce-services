@@ -1,11 +1,11 @@
-package br.com.ufape.es.topicos.price_service.service;
+package br.com.ufape.es.topicos.product_service.service;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
-import br.com.ufape.es.topicos.price_service.config.RabbitMQConsumerConfig;
+import br.com.ufape.es.topicos.product_service.config.RabbitMQConsumerConfig;
 
 @Service
-public class ProductMessageConsumer {
+public class PriceMessageConsumer {
 
     @RabbitListener(queues = RabbitMQConsumerConfig.QUEUE_NAME)
     public void receiveMessage(String message) {

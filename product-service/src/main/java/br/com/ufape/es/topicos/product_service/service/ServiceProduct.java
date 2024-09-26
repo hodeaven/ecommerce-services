@@ -78,15 +78,12 @@ public class ServiceProduct {
         List<ProductResponse> productResponses = products.stream()
                                                          .map(this::mapToProductResponse)
                                                          .toList();
-
-        // Enviar mensagem para o RabbitMQ quando a lista de produtos for recuperada
-        String message = "Total de produtos recuperados: " + productResponses.size();
-        messageProducer.sendMessage(message);
         return productResponses;
     }
 
     public ProductResponse getProductById(Long id){
         Product product = repositoryProduct.findById(id).orElse(null);
+        messageProducer.sendMessage(String.valueOf(product.getId())); //enviando uma requisição assíncrona
         return mapToProductResponse(product);
     }
 
