@@ -1,6 +1,7 @@
 package br.com.ufape.es.topicos.product_service.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ufape.es.topicos.product_service.dto.ProductRequest;
@@ -33,8 +34,8 @@ public class ControllerProduct {
     @CircuitBreaker(name = "inventory", fallbackMethod= "fallbackMethod")
     @TimeLimiter(name = "inventory")
     @Retry(name = "inventory")
-    public CompletableFuture<String> createProduct(@RequestBody ProductRequest productRequest) {
-        serviceProduct.createProduct(productRequest);
+    public CompletableFuture<String> createProduct(@RequestBody ProductRequest productRequest, @RequestParam(required = false) String quantity, @RequestParam(required = false) String price) {
+        serviceProduct.createProduct(productRequest,quantity,price);
         return CompletableFuture.supplyAsync(() -> "Produto adicionado!");
     }
 

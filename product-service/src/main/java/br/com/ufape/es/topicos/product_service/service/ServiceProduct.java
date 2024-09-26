@@ -23,7 +23,7 @@ public class ServiceProduct {
     private final WebClient.Builder webClientBuilder;
     private final ProductMessageProducer messageProducer; //
 
-    public void createProduct(ProductRequest productRequest){
+    public void createProduct(ProductRequest productRequest, String quantity, String price){
         Product product = Product.builder()
         .name(productRequest.getName())
         .description(productRequest.getDescription())
@@ -32,16 +32,19 @@ public class ServiceProduct {
 
         repositoryProduct.save(product);
 
+        if(quantity == null) quantity = "0";
+        if(price == null) price = "0";
+
         //Requisição JSON para o Inventory Service
         String inventoryBody = "{"
                             +"\"productId\": "+ product.getId() +","
-                            +"\"quantity\": "+ 0 +""
+                            +"\"quantity\": "+ quantity +""
                             + "}";
 
         //Requisição JSON para o Price Service
         String priceBody = "{"
                             +"\"productId\": "+ product.getId() +","
-                            +"\"value\": "+ 0 +""
+                            +"\"productValue\": "+ price +""
                             + "}";
         
         //Comunicação Síncrona (usando WebClient)
