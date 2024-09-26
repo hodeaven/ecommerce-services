@@ -21,6 +21,7 @@ public class ServiceProduct {
 
     private final RepositoryProduct repositoryProduct;
     private final WebClient.Builder webClientBuilder;
+    private final ProductMessageProducer messageProducer; //
 
     public void createProduct(ProductRequest productRequest){
         Product product = Product.builder()
@@ -72,8 +73,16 @@ public class ServiceProduct {
     }
 
     public List<ProductResponse> getAllProducts(){
+        // Recupera todos os produtos do repositório
         List<Product> products = repositoryProduct.findAll();
-        return products.stream().map(this::mapToProductResponse).toList();
+        List<ProductResponse> productResponses = products.stream()
+                                                         .map(this::mapToProductResponse)
+                                                         .toList();
+
+        // Enviar mensagem para o RabbitMQ quando a lista de produtos for recuperada
+        String message = "Total de produtos recuperados: " + productResponses.size();
+        messageProducer.sendMessage(message);
+        return productResponses;
     }
 
     public ProductResponse getProductById(Long id){
