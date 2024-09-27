@@ -61,8 +61,8 @@ public class ControllerProduct {
         return serviceProduct.getProductById(id);
     }
 
-    public CompletableFuture<String> fallbackMethod(ProductRequest productRequest, Throwable exception){
-        return CompletableFuture.supplyAsync(() -> "Oops! O serviço está indisponível. Tente novamente mais tarde.");
+    public CompletableFuture<String> fallbackMethod(String authorization, ProductRequest productRequest, String quantity, String price, Throwable throwable) {
+        return CompletableFuture.supplyAsync(() -> "O serviços auxiliares estão temporariamente indisponíveis. Tente novamente mais tarde.");
     }
     
     //Métodos utilizados para validações de usuários
