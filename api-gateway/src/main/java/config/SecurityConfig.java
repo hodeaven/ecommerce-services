@@ -15,9 +15,9 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http.csrf(csrf -> csrf.disable()
                     .authorizeExchange(exchange -> exchange
+                        // Permitir acesso público ao Eureka
                         .pathMatchers("/eureka/**")
                         .permitAll()
-                        .pathMatchers("http://localhost:8080/api/products").hasAuthority("vendedor") // Restrição para a rota products/
                         .anyExchange()
                         .authenticated()
                     )
