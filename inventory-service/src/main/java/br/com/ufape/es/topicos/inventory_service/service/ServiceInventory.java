@@ -3,11 +3,14 @@ package br.com.ufape.es.topicos.inventory_service.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
+
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 import br.com.ufape.es.topicos.inventory_service.model.Inventory;
 import br.com.ufape.es.topicos.inventory_service.repository.RepositoryInventory;
 import br.com.ufape.es.topicos.inventory_service.repository.RepositoryWarehouse;
+import br.com.ufape.es.topicos.inventory_service.config.RabbitMQConsumerConfig;
 import br.com.ufape.es.topicos.inventory_service.dto.InventoryRequest;
 import br.com.ufape.es.topicos.inventory_service.dto.InventoryResponse;
 
@@ -18,6 +21,7 @@ public class ServiceInventory {
 
     private final RepositoryInventory repositoryInventory;
     private final RepositoryWarehouse repositoryWarehouse;
+    private final InventoryMessageProducer messageProducer;
 
     public Inventory createInventory(InventoryRequest inventoryRequest, Long warehouseId){
         Inventory inventory = Inventory.builder()
@@ -48,5 +52,12 @@ public class ServiceInventory {
         .quantity(inventory.getQuantity())
         .warehouse(inventory.getWarehouse())
         .build();
+    }
+
+    @RabbitListener(queues = RabbitMQConsumerConfig.QUEUE_NAME)
+    public void receiveMessage(String message) {
+        String quantidadeDoProduto = String.valueOf(getInventoryById(Long.parseLong(message)).getQuantity());
+        System.out.println("Quantidade do produto ("+message+") em estoque: "+quantidadeDoProduto);
+        messageProducer.sendMessage(quantidadeDoProduto);
     }
 }

@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 import br.com.ufape.es.topicos.product_service.config.RabbitMQConsumerConfig;
 
 @Service
-public class PriceMessageConsumer {
+public class InventoryMessageConsumer {
 
-    @RabbitListener(queues = RabbitMQConsumerConfig.PRICE_QUEUE)
+    @RabbitListener(queues = RabbitMQConsumerConfig.INVENTORY_QUEUE)
     public void receiveMessage(String message) {
-        System.out.println("Mensagem recebida do serviço de preço: " + message);
+        System.out.println("Mensagem recebida do serviço de estoque: " + message);
     }
 }
