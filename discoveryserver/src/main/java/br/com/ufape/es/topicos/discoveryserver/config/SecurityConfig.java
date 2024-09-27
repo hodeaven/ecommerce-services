@@ -21,6 +21,7 @@ public class SecurityConfig {
 
     @Bean
     InMemoryUserDetailsManager userDetailsService() {
+        @SuppressWarnings("deprecation")
         UserDetails user = User.withDefaultPasswordEncoder()
             .username(username)
             .password(password)
@@ -32,7 +33,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()  // Desabilitar CSRF para simplificar chamadas externas
+            .csrf(csrf -> csrf.disable())  // Desabilitar CSRF para simplificar chamadas externas
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/eureka/**").permitAll()  // Permitir acessos ao Eureka
                 .anyRequest().authenticated()               // Exigir autenticação para outros endpoints

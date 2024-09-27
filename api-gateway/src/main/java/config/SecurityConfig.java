@@ -17,6 +17,7 @@ public class SecurityConfig {
                     .authorizeExchange(exchange -> exchange
                         .pathMatchers("/eureka/**")
                         .permitAll()
+                        .pathMatchers("http://localhost:8080/api/products").hasAuthority("vendedor") // Restrição para a rota products/
                         .anyExchange()
                         .authenticated()
                     )
