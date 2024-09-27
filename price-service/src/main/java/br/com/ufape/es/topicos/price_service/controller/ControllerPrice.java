@@ -53,6 +53,7 @@ public class ControllerPrice {
     }
 
     //Métodos utilizados para validações de usuários
+    @SuppressWarnings("unused")
     private Boolean isUser(String token, String role){
         if(getRolesFromToken(token).contains(role)){
             return true;
